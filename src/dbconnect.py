@@ -19,12 +19,13 @@ class DBConnect:
         items = json.loads(rows[0][0])
         items = items.pop(list(items)[0])
         
-        return [_['name'] for _ in items['flds']]
+        fields = [_['name'] for _ in items['flds']]
+        return [*fields, 'tags']
 
     def values(conn):
         cur = conn.cursor()
-        cur.execute("SELECT flds,sfld FROM notes")
+        cur.execute("SELECT flds,tags FROM notes")
         rows = cur.fetchall()
         
-        return [_[0].split("\x1f") for _ in rows]
+        return [[*_[0].split("\x1f"), _[1]] for _ in rows]
 
