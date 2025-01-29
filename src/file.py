@@ -5,7 +5,7 @@ import csv
 def unzip_file(f):
     try:
         with ZipFile(f, 'r') as apkg_file:
-            file = apkg_file.read('collection.anki21')
+            file = apkg_file.read('collection.anki21') if isFileInArchive('collection.anki21', apkg_file) else apkg_file.read('collection.anki2')
             with open('tempfile', 'wb') as f:
                 f.write(file)
 
@@ -25,4 +25,10 @@ def save_to_csv(f):
 
     except Exception as e:
         print(e)
+
+
+def isFileInArchive(fileName, zip):
+    files = list(zip.filelist)
+    filtered = filter(lambda f: f.filename == fileName, files)
+    return len(list(filtered)) > 0
             
